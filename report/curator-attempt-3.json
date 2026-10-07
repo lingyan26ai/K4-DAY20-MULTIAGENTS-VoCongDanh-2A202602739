@@ -1,0 +1,20 @@
+{
+  "attempt": 3,
+  "model": "openai/gpt-4o-mini",
+  "max_tokens": 4096,
+  "reply": "=== SKILL: avoid-modifying-test-files ===\n---\nname: avoid-modifying-test-files\ndescription: Use this skill when working with test files to ensure that original test files remain unchanged.\n---\n1. Always create new test files instead of modifying existing ones in the tests/ directory.\n2. Review the test file structure and naming conventions to ensure compliance with project standards.\n3. If changes are necessary, document the reasons for creating new tests in the commit message or changelog.\n\n=== SKILL: handle-file-not-found-errors ===\n---\nname: handle-file-not-found-errors\ndescription: Use this skill when encountering file not found errors during data processing tasks.\n---\n1. Check the file path for typos or incorrect directory structure.\n2. Ensure that the required files are present in the expected locations before executing the script.\n3. Implement error handling in the code to provide informative messages when files are missing, guiding users on how to resolve the issue.\n\n=== SKILL: enforce-log-output-standards ===\n---\nname: enforce-log-output-standards\ndescription: Use this skill when generating log outputs to ensure they meet specified formatting and content rules.\n---\n1. Verify that all service names in the output are in lower-case with '-' replaced by '_'.\n2. Ensure that timestamps are formatted in UTC and follow the specified format (YYYY-MM-DDTHH:MM:SSZ).\n3. Confirm that the output JSON structure adheres to the required schema, including necessary fields and their types.",
+  "usage": {
+    "input_tokens": 6266,
+    "output_tokens": 302,
+    "total_tokens": 6568,
+    "input_token_details": {
+      "audio": 0,
+      "cache_read": 0,
+      "cache_creation": 0
+    },
+    "output_token_details": {
+      "audio": 0,
+      "reasoning": 0
+    }
+  }
+}
