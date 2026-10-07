@@ -1,0 +1,115 @@
+{
+  "complete": false,
+  "reason": "Repeated OpenRouter 402 in_flight_budget_exhausted; user requested finishing report with API blocked on 2026-10-07.",
+  "development_results": "results/skills-auto-dev",
+  "experiments": [
+    {
+      "condition": "baseline",
+      "task": "code-learn",
+      "status": "COMPLETED",
+      "record": "results/baseline/code-learn/run.json"
+    },
+    {
+      "condition": "baseline",
+      "task": "data-learn",
+      "status": "BOUNDED_MODEL_FAILURE",
+      "record": "results/baseline/data-learn/run.json"
+    },
+    {
+      "condition": "baseline",
+      "task": "logs-learn",
+      "status": "COMPLETED",
+      "record": "results/baseline/logs-learn/run.json"
+    },
+    {
+      "condition": "baseline",
+      "task": "code-eval",
+      "status": "API_BLOCKED_PARTIAL",
+      "record": "results/baseline/code-eval/run.json"
+    },
+    {
+      "condition": "baseline",
+      "task": "data-eval",
+      "status": "API_BLOCKED_PARTIAL",
+      "record": "results/baseline/data-eval/run.json"
+    },
+    {
+      "condition": "baseline",
+      "task": "logs-eval",
+      "status": "COMPLETED",
+      "record": "results/baseline/logs-eval/run.json"
+    },
+    {
+      "condition": "subagents",
+      "task": "code-learn",
+      "status": "COMPLETED",
+      "record": "results/subagents/code-learn/run.json"
+    },
+    {
+      "condition": "subagents",
+      "task": "data-learn",
+      "status": "COMPLETED",
+      "record": "results/subagents/data-learn/run.json"
+    },
+    {
+      "condition": "subagents",
+      "task": "logs-learn",
+      "status": "COMPLETED",
+      "record": "results/subagents/logs-learn/run.json"
+    },
+    {
+      "condition": "subagents",
+      "task": "code-eval",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "subagents",
+      "task": "data-eval",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "subagents",
+      "task": "logs-eval",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "skills-auto",
+      "task": "code-learn",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "skills-auto",
+      "task": "data-learn",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "skills-auto",
+      "task": "logs-learn",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "skills-auto",
+      "task": "code-eval",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "skills-auto",
+      "task": "data-eval",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    },
+    {
+      "condition": "skills-auto",
+      "task": "logs-eval",
+      "status": "NOT_RUN_API_BLOCKED",
+      "record": null
+    }
+  ]
+}

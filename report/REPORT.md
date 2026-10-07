@@ -1,5 +1,7 @@
 # Báo cáo Lab: Self evolving Agentic
 
+**Trạng thái: hoàn thiện mã nguồn và báo cáo; thí nghiệm chính thức chưa đủ vì API bị chặn.** Sau lỗi 402 lặp lại dù chạy tuần tự và chờ Retry-After, người thực hiện chọn chốt báo cáo với phần API bị chặn. Không điền giả kết quả còn thiếu.
+
 
 ## 1. Thông tin nhóm và cấu hình
 
@@ -9,12 +11,11 @@
 
 - Nhà cung cấp và mô hình (`LAB_MODEL`, không ghi khóa API), nhiệt độ (`LAB_TEMPERATURE`), `recursion_limit`: OpenRouter, `openai/gpt-4o-mini`, nhiệt độ 0, `recursion_limit=60`. Giới hạn đầu ra mỗi lời gọi là 2.048 token, timeout API 60 giây, tối đa 1 lần thử lại; giữ cùng cấu hình cho các điều kiện hợp lệ.
 - Phiên bản Deep Agents (`pip show deepagents`), hệ điều hành, chạy trực tiếp hay trong Docker: `deepagents==0.7.21`, Python `3.12.14`; chạy trực tiếp trong Linux qua WSL `docker-desktop` trên máy Windows, không chạy container Docker.
-- Trước đóng băng: 9 lần chạy tác vụ học (3 baseline, 3 subagents, 3 skills-auto phát triển), 3 lần gọi curator; ngân sách tiền không được cung cấp. Kết quả chính thức dự kiến 18 ô, kèm 3 lần học phát triển để đo nhiễu. Các lần khởi động lỗi lưu riêng, không cộng vào bảng chính.
-- Commit của tag `freeze`: chưa tạo; sẽ tạo sau khi sinh skill và commit H1–H3.
+- Bộ bằng chứng hiện có: 9 bản ghi ở baseline/subagents (7 lượt kết thúc không lỗi API, 2 lượt API bị chặn có điểm một phần); 3 lượt skills-auto phát triển lưu riêng; 3 lần curator. Không đủ 18 ô chính thức. Hai lượt GraphRecursionError (baseline data-learn và skills-auto-dev data-learn) là thất bại có giới hạn, không giải xong tác vụ. Ngân sách tiền không được cung cấp.
+- Commit giả thuyết: `a11fb14`; tag `freeze`: `cf755c3e78893e9e995704cba16b7325cf9394c0`. H1–H3 được ghi trước freeze; eval chỉ bắt đầu sau đó.
 
 ## 2. Giả thuyết (commit TRƯỚC tag `freeze`, Phần 4.0)
 
-> Dự đoán điều kiện nào đạt điểm cao nhất trên **tác vụ đánh giá** và vì sao. Nêu căn cứ từ phân loại lỗi (mục 4) và từ tài liệu tham khảo. Điền cả ba dòng; `verify_freeze.py` kiểm tra điều này.
 
 - H1 (subagents so với baseline): dự đoán điểm trung bình eval của subagents cao hơn baseline, nhưng token trung bình cũng cao hơn. Baseline code-learn chỉ đạt 4/10: tác tử sửa test có sẵn và bỏ sót hai yêu cầu docstring. Explorer/reviewer có thể giúp đọc và đối chiếu đặc tả đầy đủ hơn. Anthropic mô tả lợi ích của phân việc và chi phí token lớn hơn trong hệ thống nghiên cứu đa tác tử; kết quả đó thuộc bối cảnh khác, không dùng mức tăng của họ làm dự báo định lượng cho lab này.
 - H2 (skills-auto so với baseline): dự đoán skills-auto có điểm eval cao nhất trong ba điều kiện nhờ nhớ quy ước chung từ phản hồi tác vụ học, nhưng vẫn có thể bỏ sót quy ước mới. Ba check quy ước ở baseline code-learn đều thất bại, tạo phản hồi rõ cho curator. Đây là dự đoán cần kiểm chứng: SkillsBench ghi nhận skill tự sinh không có lợi trung bình, nên không mặc định việc thêm skill sẽ tăng điểm.
@@ -28,7 +29,6 @@
 
 ## 4. Đường cơ sở và phân loại lỗi (Phần 2.2)
 
-> Chỉ dùng tác vụ học. Mỗi dòng là một check thất bại.
 
 | Tác vụ | Check thất bại | Nhóm lỗi (A-G) | Bằng chứng (trích ngắn từ `detail` hoặc vết) |
 |---|---|---|---|
@@ -73,45 +73,98 @@ Lần phát triển trước freeze được sao lưu nguyên trạng ở `resul
 
 ## 7. Kết quả so sánh (Phần 4.3, 4.4)
 
-> Dán nội dung `report/table.md` và kết quả `python scripts/check_breakdown.py`. Nêu các lần chạy có `error` hoặc `skills_modified = true` (nếu có) và cách xử lý.
+Bảng dưới do `lab.compare` sinh trực tiếp từ các bản ghi hiện có. Ô `-` là chưa chạy; không có cột skills-auto vì chưa có lượt chính thức sau freeze. Điểm code-eval/data-eval baseline là điểm tệp một phần lúc API lỗi; không dùng để suy luận chất lượng mô hình. Hàng trung bình của công cụ chưa loại lượt API lỗi nên chỉ là thống kê bản ghi.
+
+| Task | baseline | subagents |
+|---|---|---|
+| code-learn | 4/10 | 4/10 |
+| data-learn | 0/8 | 3/8 |
+| logs-learn | 1/9 | 0/9 |
+| code-eval | 1/11 | - |
+| data-eval | 0/9 | - |
+| logs-eval | 2/10 | - |
+| **Mean score - learning tasks** | 0.17 | 0.26 |
+| **Mean score - evaluation tasks** | 0.10 | - |
+| **Mean tokens per run** | 124,237 | 113,373 |
+| **Runs that read a skill** | 0/6 | 0/3 |
 
 ```text
-(dán bảng ở đây)
+condition     role    technical  house rules  mean tokens  read a skill
+baseline      eval      2/18         1/12         108,429      0/3
+baseline      learn     5/18         0/9          140,044      0/3
+subagents     learn     7/18         0/9          113,373      0/3
 ```
+
+Kết quả skills-auto **phát triển trước freeze**, không phải kết quả chính thức:
+
+| Task | Điểm | Token | skills_read | error |
+|---|---|---:|---:|---|
+| code-learn | 4/10 | 62,233 | 0 | Không |
+| data-learn | 0/8 | 320,812 | 0 | GraphRecursionError |
+| logs-learn | 1/9 | 22,076 | 0 | Không |
+
+Các lượt có error đang được giữ trong bộ bằng chứng:
+
+- baseline/code-eval: APIStatusError, 1/11, 297,083 token.
+- baseline/data-eval: APIStatusError, 0/9, 10,421 token.
+- baseline/data-learn: GraphRecursionError, 0/8, 338,755 token.
+- skills-auto-dev/data-learn: GraphRecursionError, 0/8; vết có lặp lệnh lỗi.
+
+Các lần 402 trước đó lưu tại results/infra; có bản sao cùng timestamp, không coi chúng là các lượt độc lập. Bản ghi API lỗi không dùng cho taxonomy lỗi tác tử. Không có lượt sửa skill. Ba bản ghi skills-auto trước freeze đã giữ tại skills-auto-dev và bỏ khỏi thư mục chính, nên không trộn lượt phát triển vào kết quả đóng băng.
+
+Còn thiếu 9 lượt: subagents code-eval/data-eval/logs-eval và skills-auto cả 6 tác vụ; baseline code-eval/data-eval cần chạy lại không lỗi API. Danh sách trạng thái từng ô nằm trong report/experiment-status.json.
 
 ## 8. Phân tích
 
-> Trả lời từng câu bằng số liệu từ mục 7 và bằng chứng từ vết. Kết quả âm hoặc không có khác biệt vẫn hợp lệ nếu được phân tích tốt.
+1. **Điểm và giả thuyết.** Trên learn, baseline có điểm trung bình 0.1704; subagents có điểm trung bình 0.2583; skills-auto-dev có điểm trung bình 0.1704. Subagents tăng 0,0880 điểm chuẩn hóa so với baseline; code không đổi, data tăng 3 check, logs giảm 1 check. Skills-auto-dev không cải thiện điểm trung bình so với baseline. H1/H2 dự đoán trên eval chưa kiểm chứng được vì thiếu eval subagents/skills-auto; baseline logs-eval đạt 2/10 nhưng chỉ một tác vụ không đại diện cả eval. H3 cũng chưa kiểm chứng được do không có skills-auto eval. Không kết luận có hay không quá khớp từ dữ liệu thiếu.
 
-1. So với `baseline`, điều kiện nào cải thiện điểm tác vụ **học**? Điều kiện nào cải thiện điểm tác vụ **đánh giá**? Có điều kiện nào cải thiện tác vụ học nhưng không cải thiện tác vụ đánh giá? Nếu có, đó là dấu hiệu gì?
-2. Tách điểm thành check kỹ thuật và check quy ước (`rule_`). Skill do curator sinh giúp nhóm check nào? Check quy ước **mới** của tác vụ đánh giá có được skill giúp không, và vì sao?
-3. Dựa vào vết và `skills_read`, giải thích một check mà skill giúp đạt và một check mà skill không giúp (skill chưa được đọc, đọc nhưng không làm theo, skill thiếu hoặc sai).
-4. Chi phí: so sánh số token trung bình giữa các điều kiện. Điều kiện nào có hiệu quả tốt nhất theo điểm trên mỗi token? Đa tác tử có đáng chi phí trong thí nghiệm này không?
-5. Có dấu hiệu rò rỉ dữ liệu hoặc quá khớp nào trong skill sinh ra không? Nhóm đã phòng tránh như thế nào?
-6. Nhiễu: so sánh điểm tác vụ học của cùng bộ skill ở Phần 3.4 (đã sao lưu) và sau đóng băng. Chênh lệch bao nhiêu? Nó cho biết điều gì về độ tin cậy của các chênh lệch trong bảng ở mục 7?
+2. **Kỹ thuật và quy ước.** Baseline learn đạt 5/18 check kỹ thuật và 0/9 quy ước; subagents learn đạt 7/18 và 0/9; skills-auto-dev đạt 5/18 và 0/9. Bộ skill chưa giúp tăng check quy ước trên learn. Không đọc thêm nội dung check eval để bù quy ước vào skill sau freeze; chưa có dữ liệu đo việc chuyển giao sang quy ước mới ở eval. Các số eval trong check_breakdown gồm lượt API bị chặn, không dùng làm so sánh điều kiện.
+
+3. **Cơ chế dùng skill.** Cả ba lượt skills-auto-dev có skills_read=0. Code bắt đầu bằng glob/read_file source, logs bắt đầu đọc app.log; không đọc SKILL.md. Vì vậy không có check nào có bằng chứng được skill giúp đạt. Ví dụ skill không giúp: tests_not_modified vẫn thất bại dù có avoid-modifying-test-files; rule_service_names vẫn thất bại dù skill log hướng dẫn thay gạch ngang bằng gạch dưới. Không thể nói mô hình đọc nhưng bỏ qua skill vì trace cho thấy chưa đọc.
+
+4. **Chi phí.** Chỉ so sánh ba tác vụ learn để tránh lượt API lỗi và dữ liệu thiếu:
+
+| Điều kiện | Token trung bình/lượt | Điểm chuẩn hóa trên 100.000 token |
+|---|---:|---:|
+| baseline | 140,044 | 0.1217 |
+| subagents | 113,373 | 0.2279 |
+| skills-auto-dev | 135,040 | 0.1262 |
+
+Subagents có chỉ số điểm/token cao nhất trên learn, nhưng baseline data bị vòng lặp làm tăng token, còn code/logs subagents không gọi subagent. Chưa đủ bằng chứng đa tác tử đáng chi phí trên eval hoặc luôn rẻ hơn. Token không phải chi phí USD; không suy ra giá tiền nếu không có hóa đơn/usage thực.
+
+5. **Rò rỉ và quá khớp.** Curator chỉ dùng baseline learn và trace; eval chưa chạy trước freeze. Validator chặn marker eval và tên/path không hợp lệ. Skill không chứa đáp án hoặc dòng dữ liệu; giữ nguyên sau tag. Skill log học quy ước từ learn, skill FileNotFoundError lại thiếu chẩn đoán nguyên nhân thật, nên chất lượng còn hạn chế. Đóng băng đúng thư viện không thay thế yêu cầu đủ kết quả eval.
+
+6. **Nhiễu.** Đã sao lưu skills-auto-dev trước freeze: code 4/10, data 0/8, logs 1/9, trung bình 0,1704. Chưa có lần learn chính thức sau freeze nên chênh lệch trước/sau là **chưa đo**, không phải 0. Không thể ước lượng nhiễu hoặc khẳng định các chênh lệch nhỏ là ổn định.
 
 ## 9. Hạn chế và tính hợp lệ
 
-> Nêu ít nhất 3 hạn chế và ảnh hưởng của từng hạn chế đến kết luận (ví dụ: chỉ 3 tác vụ mỗi vai trò, mỗi cấu hình chạy một lần, nhiễu của mô hình, tác vụ do giảng viên thiết kế sẵn quy ước, chỉ một mô hình).
+0. API trả 402 in_flight_budget_exhausted lặp lại; phần lớn eval và toàn bộ skills-auto chính thức chưa có. Vì vậy không đủ dữ liệu kiểm chứng H1–H3, không có bảng so sánh chính thức đủ ba điều kiện. Lượt lỗi API không được tính là lỗi suy luận tác tử.
 
 1. Chỉ ba tác vụ mỗi vai trò, một mô hình và một lần chạy cho mỗi ô; không có khoảng tin cậy. Chênh lệch nhỏ không đủ để suy rộng sang tác vụ khác.
 2. WSL tối giản chỉ có alias `python`, không có `python3` hay pandas. PATH giống nhau cho mọi điều kiện nhưng mô hình chọn lệnh khác nhau; lỗi môi trường và vòng lặp làm điểm/token data khó diễn giải như năng lực suy luận thuần túy.
 3. Giới hạn 2.048 token mỗi lời gọi và 60 bước giúp kiểm soát chi phí nhưng có thể làm tác tử kết thúc thiếu output hoặc dừng giữa quá trình. Không coi lần có GraphRecursionError là tác vụ giải thành công.
 4. Skill ngắn, còn thiếu nhiều quy ước; skill xử lý FileNotFoundError học sai trọng tâm. Kết quả đo chất lượng bộ skill tự sinh này, không đại diện mọi cách viết skill.
-5. Ba tác vụ độc lập chạy đồng thời; tải API có thể ảnh hưởng thời gian. Token có cộng nội bộ subagent nhưng trace chỉ có luồng chính; không thể kiểm toán từng thao tác bên trong subagent.
+5. Các batch learn ban đầu có ba tác vụ độc lập chạy đồng thời. Batch baseline eval gặp 402 `in_flight_budget_exhausted`, nên các lượt tiếp theo chuyển sang tuần tự và chờ Retry-After 120 giây; lượt lỗi được lưu riêng rồi chạy lại. Thời gian khác biệt tải API không thích hợp để kết luận điều kiện nào nhanh hơn. Token có cộng nội bộ subagent nhưng trace chỉ có luồng chính; không thể kiểm toán từng thao tác bên trong subagent.
 
 ## 10. Kết luận
 
-> Tối đa 5 câu. Chỉ khẳng định điều số liệu hỗ trợ. Nêu một đề xuất cải tiến tiếp theo.
+Harness, subagent, curator, bộ skill và giả thuyết trước freeze đã hoàn thiện. Trên ba tác vụ learn, subagents đạt trung bình 0,2583, baseline và skills-auto-dev cùng 0,1704. Skill chưa được đọc ở ba lượt phát triển nên chưa có bằng chứng giúp tăng điểm. API bị chặn khiến chưa thể kết luận về eval, chuyển giao hoặc nhiễu trước/sau freeze. Bước tiếp theo là khôi phục khả năng gọi API rồi chạy đủ các lượt còn thiếu với skill đã đóng băng, trước khi kiểm chứng H1–H3.
 
 ## Phụ lục
 
 - Thứ tự và lệnh tái lập: xem `report/REPRODUCE.md`. Các batch chạy cùng tham số qua `run_task`; helper trong `.venv/` điều phối phase và nạp lại key, không được đưa vào bài nộp. `report/reproduce.py` cung cấp giao diện tái lập cùng cấu hình.
-- Không làm thử thách mở rộng; hoàn thiện các mục bắt buộc 1–6 của rubric.
-- `.env` và `.venv/` được bỏ qua bởi Git. API key không được kế thừa vào shell sandbox. Lần khởi động lỗi 402 được lưu riêng, không dùng trong bảng so sánh. Mô hình thật có thể được provider cập nhật dù giữ cùng ID và temperature.
+- Không làm thử thách mở rộng. Các mục thí nghiệm bắt buộc bị thiếu đã liệt kê trong trạng thái nộp.
+- `.env` và `.venv/` được bỏ qua bởi Git. API key không được kế thừa vào shell sandbox. Lượt 402 khởi động lưu riêng; hai lượt API lỗi cuối vẫn xuất hiện trong bảng thô và được đánh dấu partial, không dùng để kết luận chất lượng mô hình. Mô hình thật có thể được provider cập nhật dù giữ cùng ID và temperature.
 
 ### Tài liệu tham khảo
 
 1. [Anthropic — How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system): phân việc theo vai trò và chi phí token của đa tác tử.
 2. [SkillsBench](https://arxiv.org/abs/2602.12670): phân biệt skill biên soạn với skill tự sinh; lợi ích trung bình của skill tự sinh không được bảo đảm.
 3. [SkillEvolBench](https://skillevolbench.github.io/): lợi ích cục bộ và khả năng chuyển giao sang tác vụ đóng băng là hai việc khác nhau.
+4. [OpenRouter — Credit limits](https://github.com/OpenRouterTeam/docs/blob/main/api_reference/limits.mdx): in-flight budget tính cả request vừa hoàn tất trong thời gian quyết toán; lỗi này có thể tiếp diễn dù không còn request đang chạy. Đã thử chờ Retry-After và chạy tuần tự nhưng vẫn bị chặn.
+
+### Trạng thái nộp
+
+Mã nguồn và báo cáo có thể nộp hiện trạng; phần thí nghiệm bị chặn chưa đáp ứng đủ rubric 2.1, 3.2, 4.3, 5.1 và phân tích nhiễu của 6.2. Không khẳng định bài đã hoàn thành toàn bộ hay đạt đủ điểm.
+
+Kiểm tra cuối ngày 07/10/2026: `32 passed in 15.16s` (report/pytest.txt). `verify_freeze.py` báo `checked 0 runs of skill conditions: OK` (report/freeze-check.txt): tag, giả thuyết và thư viện skill không đổi đạt kiểm tra cấu trúc, nhưng chưa có lượt skills-auto chính thức để đối chiếu hash/timestamp; không coi đây là hoàn thành rubric 4.3. Kiểm tra tính toàn vẹn xác nhận tệp được cung cấp và các prompt/hàm bắt buộc giữ nguyên; key cấu hình không có trong tệp nộp.

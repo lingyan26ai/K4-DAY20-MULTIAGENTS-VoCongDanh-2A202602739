@@ -1,0 +1,75 @@
+{
+  "task": "data-eval",
+  "condition": "baseline",
+  "role": "eval",
+  "error": "APIStatusError: Error code: 402 - {'error': {'message': 'This request would exceed your available credits given your current in-flight requests. Retry after in-flight requests settle, or add credits.', 'code': 402, 'metadata': {'reason': 'in_flight_budget_exhausted', 'limit_source': 'openrouter_in_flight_budget', 'remedy_hint': 'Retry after your in-flight requests settle (see the Retry-After header). Adding credits at https://openrouter.ai/settings/credits raises your in-flight budget, up to a capped ceiling.', 'headers': {'Retry-After': '120'}, 'provider_name': None}}, 'user_id': 'user_3KLq8nO1U0Vpigpyv0vxDivvhSn'}",
+  "timestamp": "2026-10-07T04:39:06.495387+00:00",
+  "skills_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "seconds": 9.4,
+  "tokens": {
+    "input": 28812,
+    "output": 142,
+    "total": 28954
+  },
+  "tool_calls": 6,
+  "subagent_calls": 0,
+  "skills_read": 0,
+  "skills_modified": false,
+  "final_message": "@@ lines 501-530 of 530 @@\n  \"id\": \"A-2059\",\n  \"placed_at\": \"2024-03-07T00:07:00Z\",\n  \"category\": \"toys\",\n  \"total\": 732.59\n },\n {\n  \"id\": \"A-2048\",\n  \"placed_at\": \"2024-03-29T13:51:00-05:00\",\n  \"category\": \"garden\",\n  \"total\": \"2,053.71\"\n },\n {\n  \"id\": \"A-2043\",\n  \"placed_at\": \"2024-04-05T02:28:00-05:00\",\n  \"category\": \"music\",\n  \"total\": \"1,097.18\"\n },\n {\n  \"id\": \"A-2051\",\n  \"placed_at\": \"2024-04-01T03:38:00-05:00\",\n  \"category\": \"GARDEN\",\n  \"total\": 900.52\n },\n {\n  \"id\": \"A-2047\",\n  \"placed_at\": \"2024-03-20T14:06:00+07:00\",\n  \"category\": \" garden \",\n  \"total\": 320.09\n }\n]",
+  "score": 0.0,
+  "passed": 0,
+  "total": 9,
+  "checks": [
+    {
+      "name": "march_revenue_utc",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "march_orders_utc",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "top_category",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "missing_total_orders",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "duplicate_events_removed",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_money_in_cents",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_meta_block",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_clean_csv",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_sorted_keys_format",
+      "passed": false,
+      "detail": ""
+    }
+  ],
+  "run_config": {
+    "model": "openai/gpt-4o-mini",
+    "temperature": 0,
+    "max_tokens": 2048,
+    "recursion_limit": 60
+  }
+}

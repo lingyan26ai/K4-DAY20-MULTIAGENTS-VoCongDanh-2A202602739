@@ -1,0 +1,75 @@
+{
+  "task": "data-eval",
+  "condition": "baseline",
+  "role": "eval",
+  "error": "APIStatusError: Error code: 402 - {'error': {'message': 'This request would exceed your available credits given your current in-flight requests. Retry after in-flight requests settle, or add credits.', 'code': 402, 'metadata': {'reason': 'in_flight_budget_exhausted', 'limit_source': 'openrouter_in_flight_budget', 'remedy_hint': 'Retry after your in-flight requests settle (see the Retry-After header). Adding credits at https://openrouter.ai/settings/credits raises your in-flight budget, up to a capped ceiling.', 'headers': {'Retry-After': '120'}, 'provider_name': None}}, 'user_id': 'user_3KLq8nO1U0Vpigpyv0vxDivvhSn'}",
+  "timestamp": "2026-10-07T04:44:40.284250+00:00",
+  "skills_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "seconds": 3.5,
+  "tokens": {
+    "input": 10354,
+    "output": 67,
+    "total": 10421
+  },
+  "tool_calls": 3,
+  "subagent_calls": 0,
+  "skills_read": 0,
+  "skills_modified": false,
+  "final_message": "@@ lines 201-300 of 530 | next offset 300 @@\n  \"id\": \"A-2024\",\n  \"placed_at\": \"2024-03-29T19:29:00+00:00\",\n  \"category\": \"MUSIC\",\n  \"total\": \"1,366.53\"\n },\n {\n  \"id\": \"A-2035\",\n  \"placed_at\": \"2024-02-25T07:28:00+07:00\",\n  \"category\": \" toys \",\n  \"total\": \"2,037.47\"\n },\n {\n  \"id\": \"A-2080\",\n  \"placed_at\": \"2024-03-28T06:38:00+07:00\",\n  \"category\": \"Music\",\n  \"total\": \"1,613.75\"\n },\n {\n  \"id\": \"A-2070\",\n  \"placed_at\": \"2024-04-07T00:09:00Z\",\n  \"category\": \"books\",\n  \"total\": \"2,151.89\"\n },\n {\n  \"id\": \"A-2039\",\n  \"placed_at\": \"2024-03-10T15:10:00+00:00\",\n  \"category\": \"books\",\n  \"total\": 34.54\n },\n {\n  \"id\": \"A-2021\",\n  \"placed_at\": \"2024-04-04T14:44:00-05:00\",\n  \"category\": \"books\",\n  \"total\": 2071.62\n },\n {\n  \"id\": \"A-2076\",\n  \"placed_at\": \"2024-03-25T13:15:00+07:00\",\n  \"category\": \"Toys\",\n  \"total\": \"1,530.15\"\n },\n {\n  \"id\": \"A-2073\",\n  \"placed_at\": \"2024-03-03T02:38:00Z\",\n  \"category\": \"toys\",\n  \"total\": 658.32\n },\n {\n  \"id\": \"A-2012\",\n  \"placed_at\": \"2024-04-03T16:56:00Z\",\n  \"category\": \"Music\",\n  \"total\": \"2,127.76\"\n },\n {\n  \"id\": \"A-2044\",\n  \"placed_at\": \"2024-02-24T04:25:00+00:00\",\n  \"category\": \"Garden\",\n  \"total\": 696.9\n },\n {\n  \"id\": \"A-2068\",\n  \"placed_at\": \"2024-03-02T12:08:00Z\",\n  \"category\": \"Toys\",\n  \"total\": \"2,378.79\"\n },\n {\n  \"id\": \"A-3001\",\n  \"placed_at\": \"2024-04-01T01:00:00+07:00\",\n  \"category\": \"Books\",\n  \"total\": 80.25\n },\n {\n  \"id\": \"A-2022\",\n  \"placed_at\": \"2024-04-04T12:06:00+07:00\",\n  \"category\": \"music\",\n  \"total\": 384.21\n },\n {\n  \"id\": \"A-2010\",\n  \"placed_at\": \"2024-03-30T23:21:00+07:00\",\n  \"category\": \"TOYS\",\n  \"total\": -1\n },\n {\n  \"id\": \"A-2041\",\n  \"placed_at\": \"2024-03-26T22:27:00Z\",\n  \"category\": \" music \",\n  \"total\": -1\n },\n {\n  \"id\": \"A-2074\",\n  \"placed_at\": \"2024-03-31T03:04:00+07:00\",\n  \"category\": \"toys\",\n  \"total\": 129.51\n },\n {\n  \"id\": \"A-2046\",\n  \"placed_at\": \"2024-03-20T18:51:00+00:00\",\n  \"category\": \"TOYS\",\n  \"total\": \"1,909.02\"",
+  "score": 0.0,
+  "passed": 0,
+  "total": 9,
+  "checks": [
+    {
+      "name": "march_revenue_utc",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "march_orders_utc",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "top_category",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "missing_total_orders",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "duplicate_events_removed",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_money_in_cents",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_meta_block",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_clean_csv",
+      "passed": false,
+      "detail": ""
+    },
+    {
+      "name": "rule_sorted_keys_format",
+      "passed": false,
+      "detail": ""
+    }
+  ],
+  "run_config": {
+    "model": "openai/gpt-4o-mini",
+    "temperature": 0,
+    "max_tokens": 2048,
+    "recursion_limit": 60
+  }
+}
